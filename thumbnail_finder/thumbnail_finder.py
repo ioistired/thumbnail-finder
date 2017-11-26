@@ -267,7 +267,7 @@ class _YouTubeScraper(Scraper):
 			"maxwidth": self.maxwidth,
 		}
 
-		return json.loads(_SESSION.get(self.OEMBED_ENDPOINT, params=params).content)
+		return json.loads(_SESSION.get(self.OEMBED_ENDPOINT, params=params).text)
 
 	def scrape(self):
 		oembed = self._fetch_from_youtube()
