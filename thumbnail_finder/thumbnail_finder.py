@@ -190,12 +190,14 @@ class _ThumbnailOnlyScraper(Scraper):
 	def _scrape_og_url(self, soup):
 		# Allow the content author to specify the thumbnail using the Open
 		# Graph protocol: http://ogp.me/
-		og_image = (soup.find('meta', property='og:image') or
-					soup.find('meta', attrs={'name': 'og:image'}))
+		og_image = (
+			soup.find('meta', property='og:image')
+			or soup.find('meta', attrs={'name': 'og:image'}))
 		if og_image and og_image.get('content'):
 			return og_image['content']
-		og_image = (soup.find('meta', property='og:image:url') or
-					soup.find('meta', attrs={'name': 'og:image:url'}))
+		og_image = (
+			soup.find('meta', property='og:image:url')
+			or soup.find('meta', attrs={'name': 'og:image:url'}))
 		if og_image and og_image.get('content'):
 			return og_image['content']
 
