@@ -12,6 +12,7 @@ setup(
 	install_requires=[
 		'bs4',
 		'flask',
+		'lxml',
 		'requests',
 		'pillow',
 	],
@@ -22,5 +23,5 @@ setup(
 		'Operating System :: POSIX',
 		'Intended Audience :: Developers',
 		'Topic :: Internet :: WWW/HTTP',
-	]
+	],
 )
