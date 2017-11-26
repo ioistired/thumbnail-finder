@@ -7,7 +7,7 @@ from thumbnail_finder import get_thumbnail_url
 
 
 app = Flask(__name__)
-DEBUG = True
+DEBUG = False
 API_VERSION = 0
 
 @app.route('/api/v{}/thumbnail'.format(API_VERSION))
