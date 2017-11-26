@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
 	name='thumbnail_finder',
-	version='0.2.1',
+	version='0.2.2',
 	url='https://github.com/bmintz/thumbnail-finder',
 
 	author='reddit Inc',
