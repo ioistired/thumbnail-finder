@@ -37,11 +37,12 @@ from PIL import Image, ImageFile
 from .utils import (
 	coerce_url_to_protocol,
 	TimeoutFunction,
-	TimeoutFunctionException
+	TimeoutFunctionException,
+	memoize,
 )
 
 
-memoize = functools.lru_cache(maxsize=None)
+_SESSION = requests.Session()
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -127,6 +128,11 @@ def get_thumbnail_url(url):
 	except:
 		logging.error('Error fetching', url)
 		logging.error(traceback.format_exc())
+
+@memoize
+def fetch(url):
+	if url is not None:
+		return _SESSION.get(url).content
 
 
 class Scraper(object):
@@ -246,7 +252,6 @@ class _ThumbnailOnlyScraper(Scraper):
 		return max_url
 
 
-_SESSION = requests.Session()
 
 class _YouTubeScraper(Scraper):
 	OEMBED_ENDPOINT = "https://www.youtube.com/oembed"

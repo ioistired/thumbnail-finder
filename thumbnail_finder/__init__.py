@@ -1,1 +1,1 @@
-from .thumbnail_finder import get_thumbnail_url
+from .thumbnail_finder import get_thumbnail_url, fetch

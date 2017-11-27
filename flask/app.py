@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
-import sys
+import imghdr as _imghdr
+import sys as _sys
 
 from flask import Flask, request, render_template, Response
 
-from thumbnail_finder import get_thumbnail_url
+from thumbnail_finder import get_thumbnail_url, fetch
 
 
 app = Flask(__name__)
@@ -17,6 +18,13 @@ BASE_URL = '/api/v{}/'.format(API_VERSION)
 @app.route(BASE_URL + 'thumbnail')
 def thumbnail():
 	image_url = get_thumbnail_url(request.args.get('page_url'))
+	if request.args.get('preview') in ('true', ''): # also allow ?preview
+		response = respond_to_image(fetch(image_url))
+		# TODO find a cleaner way to do this
+		if response is not None:
+			return response
+		else:
+			return make_plain(nullify(None))
 	return make_plain(nullify(image_url))
 
 
@@ -50,6 +58,29 @@ def make_plain(*args, **kwargs):
 	kwargs['mimetype'] = 'text/plain'
 	return Response(*args, **kwargs)
 
+def make_gen(iterable):
+	yield from iterable
+
+def respond_to_image(b: bytes):
+	mimetypes = {
+		'rgb': 'image/x-rgb',
+		'gif': 'image/gif',
+		'pbm': 'image/x-portable-bitmap',
+		'pgm': 'image/x-portable-graymap',
+		'tiff': 'image/tiff',
+		# not sure about this one, might be x-cmu-raster
+		'rast': 'image/cmu-raster',
+		'xbm': 'image/x-xbm',
+		'jpeg': 'image/jpg',
+		'bmp': 'image/bmp',
+		'png': 'image/png',
+		'webp': 'image/webp',
+		'exr': 'image/x-exr',
+	}
+	# stream the bytes to Flask
+	if b is not None:
+		return Response(b, mimetype=mimetypes.get(_imghdr.what(None, b)))
+
 
 def nullify(thing):
 	'''convert None values of `thing` to "null"'''
@@ -61,4 +92,4 @@ if __name__ == '__main__':
 	print('Running')
 	# sometimes the status message isn't written until the app is closed
 	# unless we flush stdout
-	sys.stdout.flush()
+	_sys.stdout.flush()

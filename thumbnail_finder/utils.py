@@ -21,10 +21,33 @@
 ###############################################################################
 
 from collections import OrderedDict
+from functools import lru_cache as _lru_cache
+from itertools import tee
 import re
 import signal
 import sys
+from types import GeneratorType
 import urllib.parse
+
+
+Tee = tee([], 1)[0].__class__
+
+memoize = _lru_cache(maxsize=None)
+
+
+def generator_memoize(f):
+	# https://stackoverflow.com/a/10726355/1378440
+	cache = {}
+	def ret(*args):
+		if args not in cache:
+			cache[args] = f(*args)
+		if isinstance(cache[args], (GeneratorType, Tee)):
+			# the original can't be used any more,
+			# so we need to change the cache as well
+			cache[args], r = tee(cache[args])
+			return r
+		return cache[args]
+	return ret
 
 
 def url_escape(string):
