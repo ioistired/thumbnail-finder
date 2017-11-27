@@ -20,7 +20,11 @@ def thumbnail():
 	return make_plain(nullify(image_url))
 
 
-@app.route('/')
+@app.route('/docs')
+# we set the path to '/docs' so that
+# /static can be rewritten to / by Caddy
+# otherwise, we would have to proxy / to Flask
+# and all of the static requests would be proxied too
 def index():
 	return render_template('index.html', version=API_VERSION)
 

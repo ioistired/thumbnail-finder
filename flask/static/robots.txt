@@ -1,0 +1,4 @@
+# until we get auth setup,
+# we don't want people finding us on Google and DOSing us
+User-Agent: *
+Disallow: /
