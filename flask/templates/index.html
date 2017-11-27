@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Thumbnail Finder API Docs</title>
+	<style>
+p {
+	font:15px/22px arial,sans-serif}
+code {
+	font-style: italic
+	font: 15px/22px arial,sans-serif}
+	</style>
+</head>
+<body>
+	<h1>Thumbnail Finder API Docs</h1>
+	<h2>Base URL</h2>
+	<p>
+		The base URL for all requests is
+		{% set base_url = 'https://thumbnails.nickw.io/api/v{}/'.format(version) %}
+		<code>{{ base_url }}</code>
+	</p>
+	<h2>Endpoints</h2><!--keep it plural in case we add more-->
+	<h3><code>thumbnail</code></h3>
+	<p>
+		<h4>Parameters</h4>
+		<ul><!--again, plural-->
+			<li><code>page_url</code>:
+			the URL of the page to scrape.<br></li>
+		</ul>
+		<h4>Response format</h4>
+		<code>text/plain</code>.<br>
+		An image URL, or <code>"null"</code> if not found.<br>
+		<h4>Examples</h4>
+		<ul>
+			<li>
+				<code>{{ base_url }}thumbnail?page_url=https://www.stephanboyer.com/post/134/my-unusual-hobby</code><br>
+				Expected output: <code>https://static.stephanboyer.com/coq_ide.png</code>
+			</li>
+			<li>
+				<code>{{ base_url }}thumbnail?page_url=https://www.youtube.com/watch?v=dQw4w9WgXcQ</code><br>
+				Expected output: <code>https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg</code>
+			</li>
+			<li>
+				<code>{{ base_url }}thumbnail?page_url=https://osqp.readthedocs.io/en/latest/</code><br>
+				Expected output: <code>http://osqp.readthedocs.io/en/latest/_static/img/logo.png</code>
+			</li>
+			<li>
+				<code>{{ base_url}}thumbnail?page_url=https://news.ycombinator.com/</code><br>
+				Expected output: <code>null</code>
+			</li>
+	</p>
+</body>
+</html>
