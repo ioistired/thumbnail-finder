@@ -11,7 +11,7 @@ from thumbnail_finder import get_thumbnail_url
 app = Flask(__name__)
 DEBUG = False
 API_VERSION = 0
-BASE_URL = '/api/v{}/thumbnail/'.format(API_VERSION)
+BASE_URL = '/api/v{}/'.format(API_VERSION)
 
 
 @app.route(BASE_URL + 'thumbnail')
