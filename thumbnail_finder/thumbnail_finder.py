@@ -124,9 +124,9 @@ def get_thumbnail_url(url):
 	try:
 		return TimeoutFunction(get_url, 30)(url)
 	except TimeoutFunctionException:
-		logging.error('Timed out on', url)
+		logging.error('Timed out on ' + url)
 	except:
-		logging.error('Error fetching', url)
+		logging.error('Error fetching ' + url)
 		logging.error(traceback.format_exc())
 
 @memoize
@@ -189,6 +189,7 @@ class _ThumbnailOnlyScraper(Scraper):
 		)
 
 		for scraper in scrapers:
+			logging.debug('Calling ' + scraper.__name__)
 			result = scraper(soup)
 			if result is not None:
 				return result
@@ -219,6 +220,7 @@ class _ThumbnailOnlyScraper(Scraper):
 		max_area = 0
 		max_url = None
 		for image_url in self._extract_image_urls(soup):
+			logging.debug('Extracted image URL', image_url)
 			# When isolated from the context of a webpage, protocol-relative
 			# URLs are ambiguous, so let's absolutify them now.
 			if image_url.startswith('//'):
@@ -236,7 +238,6 @@ class _ThumbnailOnlyScraper(Scraper):
 
 			# ignore excessively long/wide images
 			if max(size) / min(size) > 2:
-				print('ignore dimensions for', image_url)
 				logging.debug('ignore dimensions %s' % image_url)
 				continue
 
@@ -249,6 +250,7 @@ class _ThumbnailOnlyScraper(Scraper):
 				max_area = area
 				max_url = image_url
 
+		logging.debug('Max URL ' + max_url)
 		return max_url
 
 
