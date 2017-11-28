@@ -58,7 +58,7 @@ def _clean_url(url):
 def _initialize_request(url, referer, gzip=False):
 	url = _clean_url(url)
 
-	if not url.startswith(("http://", "https://")):
+	if not url.startswith(('http://', 'https://')):
 		return
 
 	req = urllib.request.Request(url)
@@ -79,12 +79,12 @@ def _fetch_url(url, referer=None):
 		return None, None
 	response = urllib.request.urlopen(request)
 	response_data = response.read()
-	content_encoding = response.info().get("Content-Encoding")
-	if content_encoding and content_encoding.lower() in ["gzip", "x-gzip"]:
+	content_encoding = response.info().get('Content-Encoding')
+	if content_encoding and content_encoding.lower() in ['gzip', 'x-gzip']:
 		buf = io.BytesIO(response_data)
 		f = gzip.GzipFile(fileobj=buf)
 		response_data = f.read()
-	return response.headers.get("Content-Type"), response_data
+	return response.headers.get('Content-Type'), response_data
 
 
 @memoize
@@ -163,8 +163,8 @@ class _ThumbnailOnlyScraper(Scraper):
 		self.protocol = urllib.parse.urlparse(url).scheme
 
 	def _extract_image_urls(self, soup):
-		for img in soup.findAll("img", src=True):
-			yield self._absolutify(img["src"])
+		for img in soup.find_all('img', src=True):
+			yield self._absolutify(img['src'])
 
 	def _absolutify(self, relative_url):
 		return urllib.parse.urljoin(self.url, relative_url)
@@ -181,7 +181,7 @@ class _ThumbnailOnlyScraper(Scraper):
 		if content_type and 'image' in content_type and content:
 			return self.url
 
-		if content_type and "html" in content_type and content:
+		if content_type and 'html' in content_type and content:
 			soup = BeautifulSoup(content, 'lxml')
 		else:
 			return None
@@ -258,8 +258,8 @@ class _ThumbnailOnlyScraper(Scraper):
 
 
 class _YouTubeScraper(Scraper):
-	OEMBED_ENDPOINT = "https://www.youtube.com/oembed"
-	URL_MATCH = re.compile(r"https?://((www\.)?youtube\.com/watch|youtu\.be/)")
+	OEMBED_ENDPOINT = 'https://www.youtube.com/oembed'
+	URL_MATCH = re.compile(r'https?://((www\.)?youtube\.com/watch|youtu\.be/)')
 
 	def __init__(self, url, maxwidth):
 		self.url = url
@@ -271,9 +271,9 @@ class _YouTubeScraper(Scraper):
 
 	def _fetch_from_youtube(self):
 		params = {
-			"url": self.url,
-			"format": "json",
-			"maxwidth": self.maxwidth,
+			'url': self.url,
+			'format': 'json',
+			'maxwidth': self.maxwidth,
 		}
 
 		return json.loads(_SESSION.get(self.OEMBED_ENDPOINT, params=params).text)
@@ -283,4 +283,4 @@ class _YouTubeScraper(Scraper):
 		if not oembed:
 			return
 
-		return oembed.get("thumbnail_url")
+		return oembed.get('thumbnail_url')
