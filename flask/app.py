@@ -95,7 +95,6 @@ def nullify(thing):
 
 if __name__ == '__main__':
 	app.run(debug=DEBUG)
-	print('Running')
+	logging.info('Running')
 	# sometimes the status message isn't written until the app is closed
 	# unless we flush stdout
-	_sys.stdout.flush()
