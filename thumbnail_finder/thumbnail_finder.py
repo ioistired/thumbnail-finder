@@ -214,6 +214,7 @@ class _ThumbnailOnlyScraper(Scraper):
 		# <link rel="image_src" href="http://...">
 		thumbnail_spec = soup.find('link', rel='image_src')
 		if thumbnail_spec and thumbnail_spec['href']:
+			logging.debug('Found thumbnail_spec ' + thumbnail_spec['href'])
 			return self._absolutify(thumbnail_spec['href'])
 
 	def _find_largest_image_url(self, soup):
@@ -222,7 +223,7 @@ class _ThumbnailOnlyScraper(Scraper):
 		max_area = 0
 		max_url = None
 		for image_url in self._extract_image_urls(soup):
-			logging.debug('Extracted image URL', image_url)
+			logging.debug('Extracted image URL ' + image_url)
 			# When isolated from the context of a webpage, protocol-relative
 			# URLs are ambiguous, so let's absolutify them now.
 			if image_url.startswith('//'):
