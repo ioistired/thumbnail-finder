@@ -26,6 +26,9 @@ code {
 		<ul><!--again, plural-->
 			<li><code>page_url</code>:
 			the URL of the page to scrape.<br></li>
+			<li><code>preview</code>. Acceptable values: <code>true</code> or not specified.
+			When present, the image itself is be proxied,
+			and an appropriate Content-Type is set.</li>
 		</ul>
 		<h4>Response format</h4>
 		<code>text/plain</code>.<br>
@@ -45,9 +48,23 @@ code {
 				Expected output: <code>http://osqp.readthedocs.io/en/latest/_static/img/logo.png</code>
 			</li>
 			<li>
-				<code>{{ base_url}}thumbnail?page_url=https://news.ycombinator.com/</code><br>
+				<code>{{ base_url }}thumbnail?page_url=https://news.ycombinator.com/</code><br>
 				Expected output: <code>null</code>
 			</li>
+
+			<li>
+				<code>{{ base_url }}thumbnail?page_url=https://news.ycombinator.com/&preview=true</code><br>
+				Expected output: <code>null</code>
+			</li>
+			<li>
+				<code>{{ base_url }}thumbnail?page_url=https://news.ycombinator.com/&preview</code><br>
+				Expected output: <code>null</code>
+			</li>
+			<li>
+				<code>{{ base_url }}thumbnail?page_url=https%3A//duckduckgo.com/%3Fq%3Dgoogle%2Bsucks%26ia%3Dnews&preview</code><br>
+				Expected output: <img src="{{ base_url }}thumbnail?page_url=https%3A//duckduckgo.com/%3Fq%3Dgoogle%2Bsucks%26ia%3Dnews&preview">
+			</li>
+
 	</p>
 </body>
 </html>
