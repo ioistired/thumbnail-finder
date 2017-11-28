@@ -47,8 +47,7 @@ from .utils import (
 _SESSION = requests.Session()
 _LOOP = asyncio.get_event_loop() # used for the timeouts
 
-
-logging.basicConfig(level=logging.WARNING)
+logging = logging.getLogger(__name__)
 
 
 def _clean_url(url):
