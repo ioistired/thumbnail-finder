@@ -20,6 +20,7 @@
 # Inc. All Rights Reserved.
 ###############################################################################
 
+import asyncio
 import functools
 import gzip
 import io
@@ -30,6 +31,7 @@ import traceback
 import urllib.parse
 from urllib.error import HTTPError, URLError
 
+from async_timeout import timeout
 from bs4 import BeautifulSoup
 import requests
 from PIL import Image, ImageFile
@@ -43,6 +45,7 @@ from .utils import (
 
 
 _SESSION = requests.Session()
+_LOOP = asyncio.get_event_loop() # used for the timeouts
 
 
 logging.basicConfig(level=logging.WARNING)
@@ -115,19 +118,18 @@ def _fetch_image_size(url, referer):
 
 @memoize
 def get_thumbnail_url(url):
-	def get_url(url):
+	async def get_url(url):
 		try:
 			return Scraper.for_url(url).scrape()
 		except (HTTPError, URLError):
 			return None
 
-	try:
-		return TimeoutFunction(get_url, 30)(url)
-	except TimeoutFunctionException:
-		logging.error('Timed out on ' + url)
-	except:
-		logging.error('Error fetching ' + url)
-		logging.error(traceback.format_exc())
+	async def get_url_with_timeout(url):
+		with timeout(30):
+			return await get_url(url)
+		return None
+
+	return _LOOP.run_until_complete(get_url_with_timeout(url))
 
 @memoize
 def fetch(url):
