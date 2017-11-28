@@ -163,7 +163,10 @@ class _ThumbnailOnlyScraper(Scraper):
 
 	def _extract_image_urls(self, soup):
 		for img in soup.findAll("img", src=True):
-			yield urllib.parse.urljoin(self.url, img["src"])
+			yield self._absolutify(img["src"])
+
+	def _absolutify(self, relative_url):
+		return urllib.parse.urljoin(self.url, relative_url)
 
 	def scrape(self):
 		"""Find what we think is the best thumbnail image URL for a link.
@@ -199,20 +202,18 @@ class _ThumbnailOnlyScraper(Scraper):
 		# Graph protocol: http://ogp.me/
 		og_image = (
 			soup.find('meta', property='og:image')
-			or soup.find('meta', attrs={'name': 'og:image'}))
+			or soup.find('meta', attrs={'name': 'og:image'})
+			or soup.find('meta', property='og:image:url')
+			or soup.find('meta', attrs={'name': 'og:image:url'})
+		)
 		if og_image and og_image.get('content'):
-			return og_image['content']
-		og_image = (
-			soup.find('meta', property='og:image:url')
-			or soup.find('meta', attrs={'name': 'og:image:url'}))
-		if og_image and og_image.get('content'):
-			return og_image['content']
+			return self._absolutify(og_image['content'])
 
 	def _scrape_thumbnail_spec(self, soup):
 		# <link rel="image_src" href="http://...">
 		thumbnail_spec = soup.find('link', rel='image_src')
 		if thumbnail_spec and thumbnail_spec['href']:
-			return thumbnail_spec['href']
+			return self._absolutify(thumbnail_spec['href'])
 
 	def _find_largest_image_url(self, soup):
 		# ok, we have no guidance from the author. look for the largest
