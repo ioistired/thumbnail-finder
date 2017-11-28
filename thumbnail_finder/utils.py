@@ -20,18 +20,29 @@
 # Inc. All Rights Reserved.
 ###############################################################################
 
-from collections import OrderedDict
+import asyncio as _asyncio
+from collections import OrderedDict as _OrderedDict
 from functools import lru_cache as _lru_cache
 from itertools import tee as _tee
-import re
-import sys
-from types import GeneratorType
+import re as _re
+from types import GeneratorType as _GeneratorType
 import urllib.parse
 
+from async_timeout import timeout as _timeout
 
-Tee = _tee([], 1)[0].__class__
 
+_Tee = _tee([], 1)[0].__class__
 memoize = _lru_cache(maxsize=None)
+_LOOP = _asyncio.get_event_loop()
+
+
+def timeout(coroutine, timeout=30):
+	async def inner_timeout():
+		async with _timeout(timeout):
+			return await coroutine
+		return None
+
+	return _LOOP.run_until_complete(inner_timeout())
 
 
 def generator_memoize(f):
@@ -40,7 +51,7 @@ def generator_memoize(f):
 	def ret(*args):
 		if args not in cache:
 			cache[args] = f(*args)
-		if isinstance(cache[args], (GeneratorType, Tee)):
+		if isinstance(cache[args], (_GeneratorType, _Tee)):
 			# the original can't be used any more,
 			# so we need to change the cache as well
 			cache[args], r = _tee(cache[args])
@@ -63,7 +74,7 @@ def coerce_url_to_protocol(url, protocol='http'):
 	return parsed_url.unparse()
 
 
-r_domain_prefix = re.compile('^www\d*\.')
+r_domain_prefix = _re.compile('^www\d*\.')
 
 
 def strip_www(domain):
@@ -94,9 +105,9 @@ def query_string(dict):
 # Characters that might cause parsing differences in different implementations
 # Spaces only seem to cause parsing differences when occurring directly before
 # the scheme
-URL_PROBLEMATIC_RE = re.compile(
+URL_PROBLEMATIC_RE = _re.compile(
 	r'(\A\x20|[\x00-\x19\xA0\u1680\u180E\u2000-\u2029\u205f\u3000\\])',
-	re.UNICODE
+	_re.UNICODE
 )
 
 
@@ -194,7 +205,7 @@ class UrlParser(object):
 				p = param.split('=')
 				return (unquote_plus(p[0]),
 						unquote_plus('='.join(p[1:])))
-			self._query_dict = OrderedDict(
+			self._query_dict = _OrderedDict(
 								 _split(p) for p in self.query.split('&') if p)
 		return self._query_dict
 
@@ -311,7 +322,7 @@ class UrlParser(object):
 
 		# Reject any URLs that contain characters known to cause parsing
 		# differences between parser implementations
-		for match in re.finditer(URL_PROBLEMATIC_RE, self._orig_url):
+		for match in _re.finditer(URL_PROBLEMATIC_RE, self._orig_url):
 			# XXX: Yuck. We have non-breaking spaces in title slugs! They
 			# should be safe enough to allow after three slashes. Opera 12's the
 			# only browser that trips over them, and it doesn't fall for
