@@ -22,15 +22,14 @@
 
 from collections import OrderedDict
 from functools import lru_cache as _lru_cache
-from itertools import tee
+from itertools import tee as _tee
 import re
-import signal
 import sys
 from types import GeneratorType
 import urllib.parse
 
 
-Tee = tee([], 1)[0].__class__
+Tee = _tee([], 1)[0].__class__
 
 memoize = _lru_cache(maxsize=None)
 
@@ -44,7 +43,7 @@ def generator_memoize(f):
 		if isinstance(cache[args], (GeneratorType, Tee)):
 			# the original can't be used any more,
 			# so we need to change the cache as well
-			cache[args], r = tee(cache[args])
+			cache[args], r = _tee(cache[args])
 			return r
 		return cache[args]
 	return ret
@@ -353,29 +352,3 @@ class UrlParser(object):
 
 		return urlunparse((u.scheme.lower(), netloc,
 						   u.path, u.params, u.query, fragment))
-
-
-class TimeoutFunctionException(Exception):
-	pass
-
-
-class TimeoutFunction:
-	"""Force an operation to timeout after N seconds. Works with POSIX
-	   signals, so it's not safe to use in a multi-treaded environment"""
-	def __init__(self, function, timeout):
-		self.timeout = timeout
-		self.function = function
-
-	def handle_timeout(self, signum, frame):
-		raise TimeoutFunctionException()
-
-	def __call__(self, *args, **kwargs):
-		# can only be called from the main thread
-		old = signal.signal(signal.SIGALRM, self.handle_timeout)
-		signal.alarm(self.timeout)
-		try:
-			result = self.function(*args, **kwargs)
-		finally:
-			signal.alarm(0)
-			signal.signal(signal.SIGALRM, old)
-		return result
