@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import imghdr as _imghdr
+import logging
 import sys as _sys
 
 from flask import Flask, request, render_template, Response
@@ -9,16 +10,21 @@ from flask import Flask, request, render_template, Response
 from thumbnail_finder import get_thumbnail_url, fetch
 
 
+
 app = Flask(__name__)
 DEBUG = False
 API_VERSION = 0
 BASE_URL = '/api/v{}/'.format(API_VERSION)
+logging.basicConfig(level=logging.DEBUG if DEBUG else logging.WARNING)
 
 
 @app.route(BASE_URL + 'thumbnail')
 def thumbnail():
-	image_url = get_thumbnail_url(request.args.get('page_url'))
+	page_url = request.args.get('page_url')
+	logging.debug('User requested page url ' + page_url)
+	image_url = get_thumbnail_url(page_url)
 	if request.args.get('preview') in ('true', ''): # also allow ?preview
+		logging.debug('User requested image proxy')
 		response = respond_to_image(fetch(image_url))
 		# TODO find a cleaner way to do this
 		if response is not None:
