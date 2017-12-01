@@ -1,22 +1,24 @@
-## This repository is archived.
+# Thumbnail finder
 
-This repository is archived and will not receive any updates or accept issues or pull requests.
+Scrapes thumbnails from web pages and provides the resulting images over an API.
 
-To report bugs in reddit.com please make a post in [/r/bugs](http://www.reddit.com/r/bugs).
+## [Usage](https://thumbnails.nickw.io)
+## License
 
-If you have found a bug that can in some way compromise the security of the
-site or its users, please exercise [responsible
-disclosure](http://www.reddit.com/wiki/whitehat) and e-mail
-security@reddit.com.
+Thumbnail finder uses code from [reddit](https://github.com/reddit/reddit), licensed under the Common Public Attribution License 1.0.
 
----
+ Thumbnail finder scrapes thumbnails from web pages
+© 2017 Benjamin Mintz, reddit Inc.
 
-### API
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
-For notices about reddit API changes and discussion of reddit API client development, subscribe to the [/r/redditdev](http://www.reddit.com/r/redditdev) and [/r/changelog](http://www.reddit.com/r/changelog) subreddits.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
 
-To learn more about reddit's API, check out our [automated API documentation](http://www.reddit.com/dev/api) and the [API wiki page](https://github.com/reddit/reddit/wiki/API). Please use a unique User-Agent string and take care to abide by our [API rules](https://github.com/reddit/reddit/wiki/API#wiki-rules).
-
-### Quickstart
-
-To set up your own instance of reddit see the [install guide](https://github.com/reddit/reddit/wiki/Install-guide).
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
