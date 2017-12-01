@@ -5,7 +5,7 @@ Scrapes thumbnails from web pages and provides the resulting images over an API.
 ## [Usage](https://thumbnails.nickw.io)
 ## License
 
-Thumbnail finder uses code from [reddit](https://github.com/reddit/reddit), licensed under the Common Public Attribution License 1.0.
+Thumbnail finder uses code from [reddit](https://github.com/reddit/reddit), licensed under the [Common Public Attribution License 1.0](https://github.com/reddit/reddit/blob/master/LICENSE).
 
  Thumbnail finder scrapes thumbnails from web pages
 © 2017 Benjamin Mintz, reddit Inc.
