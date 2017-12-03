@@ -7,8 +7,8 @@ Scrapes thumbnails from web pages and provides the resulting images over an API.
 
 Thumbnail finder uses code from [reddit](https://github.com/reddit/reddit), licensed under the [Common Public Attribution License 1.0](https://github.com/reddit/reddit/blob/master/LICENSE).
 
- Thumbnail finder scrapes thumbnails from web pages
-© 2017 Benjamin Mintz, reddit Inc.
+Thumbnail finder scrapes thumbnails from web pages
+© 2017 Benjamin Mintz and reddit Inc.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
